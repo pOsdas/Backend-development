@@ -9,13 +9,13 @@ def encode_jwt(
         payload: dict,
         private_key: str = settings.auth_jwt.private_key_path.read_text(),
         algorithm: str = settings.auth_jwt.algorithm,
-        expire_at: datetime | None = None,
-        expires_in: int = settings.auth_jwt.access_token_expires_in,
+        expires_in: int = settings.auth_jwt.access_token_expires_in,  # minutes
+        expire_timedelta: timedelta | None = None,
 ):
     to_encode = payload.copy()
     now = datetime.now(timezone.utc)
-    if expire_at:
-        expire = expire_at
+    if expire_timedelta:
+        expire = now + expire_timedelta
     else:
         expire = now + timedelta(minutes=expires_in)
     to_encode.update(
